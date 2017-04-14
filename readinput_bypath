@@ -1,5 +1,5 @@
-function pos_disp=readinput_bypath(i_lam)
-fname=['../PATH/abaqus',num2str(i_lam),'.rpt'];
+function pos_disp=readinput_bypath(i_lam,path)
+fname=[path,'abaqus',num2str(i_lam),'.rpt'];
 
 fid=fopen(fname,'r');
 pos_disp=zeros(81,7);  % ID,x,y,up,vp,us,vs
