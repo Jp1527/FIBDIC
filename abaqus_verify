@@ -6,7 +6,7 @@
  
 i_lam=3;
 
-pos_disp=readinput_bypath(i_lam);
+pos_disp=readinput_bypath(i_lam,'../eighth1');
 pos1=pos_disp(:,2:7);
 
 % draw the displacement field
