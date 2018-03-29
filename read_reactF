@@ -1,0 +1,82 @@
+% functiuon react=read_reactF(fname,str)
+fname='../react/abaqus-r1P.rpt';
+str='Path2-S12';
+% str is used for look for specific Path and Stress according to headline
+
+react=zeros(8,n_col);
+tmp=max(strfind(fname, '.'));
+i_lam=str2num(fname(tmp-2));
+PSmode=fname(tmp-1);
+fid=fopen(fname,'rt');
+stress=zeros(160,(6-i_lam)*4);
+lcount=0;
+while fid~=-1
+    tmpl=fgetl(fid);
+    if tmpl==-1
+        break;
+    end
+    lcount=lcount+1;
+    if lcount==680
+    
+    end
+    
+    if size(tmpl,2)<20
+        continue;
+    elseif any(strfind(tmpl, 'X'))
+        headline=tmpl;
+        tmp=strfind(tmpl,'P');
+        n_col=size(tmp,2);
+        X=zeros(1,n_col);
+        Xcount=X;
+        if n_col/2~=6-i_lam
+            error(['error read ',fname,': incorrect column number\n']);
+        end
+    else
+        X1=str2num(tmpl(1:28));
+        for ic=1:n_col
+            ctmp=tmpl(9+19*ic:27+19*ic);
+            if any(strfind(ctmp,'NoValue'))
+                continue;
+            end
+            tmp=str2num(ctmp);
+            Xcount(ic)=Xcount(ic)+1;
+            stress(Xcount(ic),2*ic-1)=X1;
+            stress(Xcount(ic),2*ic)=tmp;
+        end
+    end
+end
+
+react=zeros(8,n_col);
+for ic=1:n_col
+    cir_8=stress(Xcount(ic),2*ic-1)/8;
+    Xtmp=stress(1:Xcount(ic),2*ic-1);
+    Stmp=stress(1:Xcount(ic),2*ic  );
+    icount=0;
+    sum=0;
+    ID=0;
+    for i =1:Xcount(ic)-1
+        ID1=floor(Xtmp(i)/cir_8)+1;
+        if ID1~=ID
+            if ID~=0
+                react(ID,ic)=sum/icount;
+            end
+            sum=0;icount=0;
+            ID=ID1;
+        end
+        icount=icount+Xtmp(i+1)-Xtmp(i);
+        sum=sum+Stmp(i)*(Xtmp(i+1)-Xtmp(i));
+    end
+    react(ID,ic)=sum/icount;
+    
+end
+
+react=react(8:-1:1,:);
+
+tt=strfind(headline,str);       
+if isempty(tt)
+else
+    t=floor(tt/19);
+    react=react(:,t);
+end
+
+    

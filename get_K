@@ -1,0 +1,40 @@
+% input: the ID of laminent
+% output: K=[K1,K2,K3,K4];
+% assemble: K1~K4 for each laminent
+
+% fixd parameter: filename, file_format
+% default mode  : displacement
+function K=get_K(i_lam)
+K=0;
+pos_disp=readinput_bypath(i_lam,'../eighth1');
+pos1=pos_disp(:,2:7);
+K1=ordering(pos1);
+K=K1;
+pos_disp=readinput_bypath(i_lam,'../eighth2');
+pos2=pos_disp(:,2:7);
+G1=ordering(pos2);
+K=[K,G1];
+% rotate 1
+pos1=rotating(pos1);
+K2=ordering(pos1);
+K=[K,K2];
+pos2=rotating(pos2);
+G2=ordering(pos2);
+K=[K,G2];
+
+% rotate 2
+pos1=rotating(pos1);
+K2=ordering(pos1);
+K=[K,K2];
+pos2=rotating(pos2);
+G2=ordering(pos2);
+K=[K,G2];
+
+% rotate 3
+pos1=rotating(pos1);
+K2=ordering(pos1);
+K=[K,K2];
+pos2=rotating(pos2);
+G2=ordering(pos2);
+K=[K,G2];
+            

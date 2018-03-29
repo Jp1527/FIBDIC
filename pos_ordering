@@ -1,0 +1,16 @@
+function pos2=pos_ordering(pos)
+
+pos2=pos-pos;
+n=size(pos,1);
+
+for iK=1:n
+    ix=pos(iK,1)/0.3+5;
+    iy=-pos(iK,2)/0.3+5;
+    Id=9*(iy-1)+ix;
+	pos2(Id,1)=pos(iK,1);
+	pos2(Id,2)=pos(iK,2);
+	pos2(Id,3)=pos(iK,3);
+	pos2(Id,4)=pos(iK,4);
+	pos2(Id,5)=pos(iK,5);
+	pos2(Id,6)=pos(iK,6);
+end

@@ -1,0 +1,45 @@
+% abaqus result verify
+% In the accodring model, pressure('P') or surface tranction('S') is applied on a quarter of the ring sloth
+% cited functions:
+%		rotating
+%		
+ 
+i_lam=3;
+
+pos_disp=readinput_bypath(i_lam,'../eighth1');
+pos1=pos_disp(:,2:7);
+
+% draw the displacement field
+figure(1);
+subplot(1,2,1);
+plot(pos_disp(:,1)',pos1(:,4)');
+title('P');
+subplot(1,2,2);
+plot(pos_disp(:,1)',pos1(:,6)');
+title('S');
+
+figure(2);
+subplot(1,2,1);
+quiver(pos1(:,1),pos1(:,2),pos1(:,3),pos1(:,4));
+title('P');
+subplot(1,2,2);
+quiver(pos1(:,1),pos1(:,2),pos1(:,5),pos1(:,6));
+title('S');
+
+% add two to see symmetry
+pos2=rotating(pos1);
+pos2=pos_ordering(pos2);
+pos1=pos_ordering(pos1);
+if all(all(pos2(:,1:2)==pos1(:,1:2)))
+	pos=pos1;
+	pos(:,3:end)=pos(:,3:end)+pos2(:,3:end);
+else
+	error('checkprogramming: pos_ordering \n');
+end
+figure(3);
+subplot(1,2,1);
+quiver(pos(:,1),pos(:,2),pos(:,3),pos(:,4));
+title('P');
+subplot(1,2,2);
+quiver(pos(:,1),pos(:,2),pos(:,5),pos(:,6));
+title('S');
